@@ -1,0 +1,24 @@
+type HttpHeader = record { value : text; name : text };
+type HttpRequest = record {
+  url : text;
+  method : text;
+  body : blob;
+  headers : vec record { text; text };
+};
+type HttpResponse = record {
+  body : blob;
+  headers : vec record { text; text };
+  upgrade : opt bool;
+  status_code : nat16;
+};
+type HttpResponse_1 = record {
+  status : nat;
+  body : blob;
+  headers : vec HttpHeader;
+};
+type TransformArgs = record { context : blob; response : HttpResponse_1 };
+service : {
+  http_request : (HttpRequest) -> (HttpResponse) composite_query;
+  http_request_update : (HttpRequest) -> (HttpResponse);
+  transform : (TransformArgs) -> (HttpResponse_1) query;
+}
